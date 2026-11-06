@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitación Oficial de Promoción - Los Briceñitos</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Montserrat:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.com/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            light: '#fef08a',
+                            DEFAULT: '#d4af37',
+                            dark: '#aa7c11',
+                        },
+                        darkBg: '#0b0b0e',
+                        cardBg: '#141419'
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        montserrat: ['Montserrat', 'sans-serif'],
+                        cursive: ['Great Vibes', 'cursive']
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 2s infinite alternate',
+                        'float': 'float 4s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%': { boxShadow: '0 0 15px rgba(212, 175, 55, 0.3)' },
+                            '100%': { boxShadow: '0 0 35px rgba(212, 175, 55, 0.8)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0b0b0e;
+            color: #e5e7eb;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #fff3a1 0%, #d4af37 50%, #aa7c11 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-border {
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .gold-gradient-bg {
+            background: linear-gradient(135deg, #d4af37 0%, #aa7c11 100%);
+        }
+
+        /* Glassmorphism custom */
+        .glass-card {
+            background: rgba(20, 20, 25, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+        }
+
+        /* Ambient glowing lights */
+        .ambient-light {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0b0e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d4af37;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen overflow-x-hidden">
+
+    <!-- CANVAS PARA PARTÍCULAS Y MAGIA -->
+    <canvas id="particlesCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- ========================================== -->
+    <!-- INTRODUCCIÓN ANIMADA: CASTILLO & PRINCESA  -->
+    <!-- ========================================== -->
+    <div id="videoIntroScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-black transition-opacity duration-1000 overflow-hidden">
+        
+        <!-- Canvas de Animación 2D Temática (Castillo, Princesa, Destellos) -->
+        <canvas id="animationCanvas" class="absolute inset-0 w-full h-full object-cover"></canvas>
+
+        <!-- Overlay con Gradiente Elegante -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/60"></div>
+        
+        <!-- Contenedor de Bienvenida sobre la Animación -->
+        <div class="relative w-full max-w-4xl px-6 text-center z-10 flex flex-col items-center">
+            
+            <!-- Emblema Real / Promoción -->
+            <div id="introLogo" class="opacity-0 transform translate-y-6 transition-all duration-1000 ease-out mb-4">
+                <div class="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full border-2 border-gold flex items-center justify-center shadow-lg shadow-gold/40 bg-darkBg/80 backdrop-blur-md">
+                    <i data-lucide="crown" class="w-10 h-10 sm:w-12 sm:h-12 text-gold"></i>
+                </div>
+            </div>
+
+            <!-- Títulos Cinemáticos de Cuento de Hadas -->
+            <div class="space-y-3 mb-8">
+                <p class="font-cinzel tracking-[0.3em] text-xs sm:text-sm text-gold uppercase">Colegio Honores de Izaguirre • Nivel Secundaria</p>
+                <h1 class="font-cinzel text-3xl sm:text-6xl font-bold gold-gradient-text uppercase tracking-widest leading-tight">
+                    UNA NOCHE MÁGICA DE GALA
+                </h1>
+                <p class="font-cursive text-2xl sm:text-4xl text-white">Promoción D'KHAOS 2026</p>
+            </div>
+
+            <!-- Botón de Inicio de Animación / Video -->
+            <div id="introAction" class="transition-opacity duration-1000">
+                <button id="startExperienceBtn" onclick="playCinematicVideo()" class="group relative inline-flex items-center justify-center px-8 py-4 overflow-hidden font-cinzel font-bold text-black rounded-full gold-gradient-bg shadow-xl animate-pulse-glow hover:scale-105 transition-all duration-300">
+                    <span class="flex items-center gap-3 tracking-wider text-base">
+                        <i data-lucide="sparkles" class="w-5 h-5 fill-current"></i>
+                        VER ANIMACIÓN DE BIENVENIDA
+                    </span>
+                </button>
+            </div>
+
+            <!-- Barra de Estado de la Animación / Botón Omitir -->
+            <div id="videoControls" class="mt-8 flex flex-col items-center gap-3 hidden">
+                <p class="text-xs font-cinzel text-gold/80 tracking-widest uppercase">La invitación se abrirá al finalizar la historia...</p>
+                <button id="skipBtn" onclick="revealMainInvitation()" class="px-5 py-2 text-xs font-cinzel text-gold/80 hover:text-white border border-gold/40 hover:border-gold rounded-full backdrop-blur-md transition-all">
+                    Omitir e Ir Directo a la Invitación <i data-lucide="chevron-right" class="inline w-3 h-3 ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TARJETA PRINCIPAL DE LA INVITACIÓN          -->
+    <!-- ========================================== -->
+    <main id="mainInvitation" class="relative z-10 min-h-screen opacity-0 pointer-events-none transition-opacity duration-1000 pb-20">
+        
+        <!-- Header / Banner de Gala -->
+        <section class="relative min-h-[70vh] flex flex-col justify-center items-center text-center px-4 pt-12 pb-16 overflow-hidden">
+            <div class="ambient-light top-10 left-1/2 -translate-x-1/2"></div>
+            
+            <!-- Adorno Marco Elegante -->
+            <div class="inline-block p-2 border border-gold/40 rounded-full mb-6 animate-float">
+                <div class="px-6 py-2 rounded-full bg-gold/10 border border-gold/60 backdrop-blur-md">
+                    <span class="font-cinzel text-xs sm:text-sm tracking-[0.3em] text-gold uppercase">Colegio Honores de Izaguirre • Secundaria</span>
+                </div>
+            </div>
+
+            <h1 class="font-cinzel text-4xl sm:text-7xl font-extrabold text-white tracking-widest mb-4">
+                PROMOCIÓN <span class="gold-gradient-text block sm:inline mt-2 sm:mt-0">D'KHAOS</span>
+            </h1>
+
+            <p class="font-cursive text-3xl sm:text-5xl text-gold/90 mb-6">"Legado de Excelencia y Ensueño"</p>
+
+            <p class="max-w-xl text-gray-300 text-sm sm:text-base font-light leading-relaxed mb-8 px-4">
+                Nos llena de alegría invitarte cordialmente a celebrar junto a nosotros el baile y cena de graduación. ¡Te esperamos para compartir una noche mágica e inolvidable!
+            </p>
+
+            <!-- Botón de Audio Mute/Unmute flotante -->
+            <button id="toggleAudioBtn" onclick="toggleAudio()" class="fixed bottom-6 right-6 z-40 p-3 rounded-full bg-darkBg/80 border border-gold/50 text-gold shadow-lg hover:scale-110 transition-transform flex items-center justify-center">
+                <i id="audioIcon" data-lucide="volume-2" class="w-6 h-6"></i>
+            </button>
+        </section>
+
+        <!-- SECCIÓN: TARJETA INFORMATIVA PRINCIPAL -->
+        <section class="max-w-4xl mx-auto px-4 mb-20">
+            <div class="glass-card rounded-2xl p-8 sm:p-12 text-center relative border-2 border-gold/40 shadow-2xl">
+                <div class="w-16 h-16 mx-auto rounded-full bg-gold/10 border border-gold/50 flex items-center justify-center mb-6 text-gold">
+                    <i data-lucide="mail-open" class="w-8 h-8"></i>
+                </div>
+                <h2 class="font-cinzel text-2xl sm:text-4xl text-white tracking-widest mb-4">
+                    ESTÁS CORDIALMENTE <span class="gold-gradient-text">INVITADO/A</span>
+                </h2>
+                <p class="text-gray-300 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto mb-8">
+                    Tu presencia engalanará nuestro evento. Ven a compartir la emoción, la cena y el gran baile de celebración de nuestra promoción D'KHAOS.
+                </p>
+
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button onclick="addToCalendar()" class="inline-flex items-center gap-2 px-6 py-3 rounded-full gold-gradient-bg text-black font-cinzel font-bold text-xs sm:text-sm tracking-wider hover:opacity-90 transition-opacity shadow-lg">
+                        <i data-lucide="calendar-plus" class="w-4 h-4"></i> Guardar en Google Calendar
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: CUENTA REGRESIVA -->
+        <section class="max-w-4xl mx-auto px-4 mb-20">
+            <div class="glass-card rounded-2xl p-6 sm:p-10 text-center relative overflow-hidden">
+                <h3 class="font-cinzel text-xl sm:text-2xl text-gold tracking-wider mb-6">TIEMPO PARA LA GRAN NOCHE</h3>
+                
+                <div class="grid grid-cols-4 gap-2 sm:gap-6 max-w-2xl mx-auto">
+                    <div class="bg-darkBg/80 p-3 sm:p-5 rounded-xl border border-gold/30">
+                        <span id="cd-days" class="font-cinzel text-2xl sm:text-5xl font-bold text-white block">00</span>
+                        <span class="text-[10px] sm:text-xs text-gold/80 uppercase tracking-widest mt-1 block">Días</span>
+                    </div>
+                    <div class="bg-darkBg/80 p-3 sm:p-5 rounded-xl border border-gold/30">
+                        <span id="cd-hours" class="font-cinzel text-2xl sm:text-5xl font-bold text-white block">00</span>
+                        <span class="text-[10px] sm:text-xs text-gold/80 uppercase tracking-widest mt-1 block">Horas</span>
+                    </div>
+                    <div class="bg-darkBg/80 p-3 sm:p-5 rounded-xl border border-gold/30">
+                        <span id="cd-minutes" class="font-cinzel text-2xl sm:text-5xl font-bold text-white block">00</span>
+                        <span class="text-[10px] sm:text-xs text-gold/80 uppercase tracking-widest mt-1 block">Minutos</span>
+                    </div>
+                    <div class="bg-darkBg/80 p-3 sm:p-5 rounded-xl border border-gold/30">
+                        <span id="cd-seconds" class="font-cinzel text-2xl sm:text-5xl font-bold text-gold block">00</span>
+                        <span class="text-[10px] sm:text-xs text-gold/80 uppercase tracking-widest mt-1 block">Segundos</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: DETALLES DEL EVENTO -->
+        <section class="max-w-5xl mx-auto px-4 mb-20">
+            <h2 class="font-cinzel text-2xl sm:text-4xl text-center text-white tracking-widest mb-12">
+                INFORMACIÓN DEL <span class="gold-gradient-text">EVENTO</span>
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- CARD FECHA Y HORA -->
+                <div class="glass-card rounded-2xl p-8 text-center flex flex-col items-center hover:border-gold/60 transition-all duration-300">
+                    <div class="w-16 h-16 rounded-full bg-gold/10 border border-gold/40 flex items-center justify-center mb-6 text-gold">
+                        <i data-lucide="calendar" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="font-cinzel text-lg font-bold text-gold mb-2 uppercase tracking-wider">Fecha y Hora</h3>
+                    <p class="text-white font-medium text-lg">Sábado, 21 de Noviembre de 2026</p>
+                    <p class="text-gray-400 text-sm mt-1">Hora de Inicio: 06:30 PM</p>
+                    <p class="text-gray-400 text-sm">Inicio Ceremonia: 08:30 PM</p>
+                </div>
+
+                <!-- CARD LUGAR -->
+                <div class="glass-card rounded-2xl p-8 text-center flex flex-col items-center hover:border-gold/60 transition-all duration-300">
+                    <div class="w-16 h-16 rounded-full bg-gold/10 border border-gold/40 flex items-center justify-center mb-6 text-gold">
+                        <i data-lucide="map-pin" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="font-cinzel text-lg font-bold text-gold mb-2 uppercase tracking-wider">Ubicación</h3>
+                    <p class="text-white font-medium text-lg">Orquidia Dorada</p>
+                    <p class="text-gray-400 text-sm mt-1">Av. Chillón Trapiche 051, Comas 15316</p>
+                    <a href="https://www.google.com/maps/place/?q=place_id:ChIJ_fvvfPzRBZERNVtsrRCZYkA" target="_blank" class="mt-4 text-xs font-cinzel text-gold underline underline-offset-4 hover:text-white">Ver en Google Maps</a>
+                </div>
+
+                <!-- CARD DRESS CODE -->
+                <div class="glass-card rounded-2xl p-8 text-center flex flex-col items-center hover:border-gold/60 transition-all duration-300">
+                    <div class="w-16 h-16 rounded-full bg-gold/10 border border-gold/40 flex items-center justify-center mb-6 text-gold">
+                        <i data-lucide="sparkles" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="font-cinzel text-lg font-bold text-gold mb-2 uppercase tracking-wider">Código de Vestimenta</h3>
+                    <p class="text-white font-medium text-lg">Gala / Princesas & Príncipes</p>
+                    <p class="text-gray-400 text-sm mt-1">Damas: Vestido Elegante de Gala</p>
+                    <p class="text-gray-400 text-sm">Caballeros: Traje Formal / Esmoquin</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECCIÓN: ITINERARIO -->
+        <section class="max-w-3xl mx-auto px-4 mb-20">
+            <h2 class="font-cinzel text-2xl sm:text-4xl text-center text-white tracking-widest mb-12">
+                PROGRAMA DE LA <span class="gold-gradient-text">NOCHE</span>
+            </h2>
+
+            <div class="relative border-l-2 border-gold/40 ml-28 sm:ml-48 space-y-10">
+                <!-- 1. RECEPCIÓN -->
+                <div class="relative pl-6 sm:pl-8 flex flex-col justify-center min-h-[40px]">
+                    <span class="absolute -left-[9px] top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-gold shadow-md shadow-gold/50 border-2 border-darkBg"></span>
+                    <span class="absolute -left-28 sm:-left-44 top-1/2 -translate-y-1/2 font-cinzel text-gold font-bold text-xs sm:text-base text-right w-24 sm:w-40 pr-2">06:30 PM</span>
+                    <h4 class="font-cinzel text-base sm:text-lg font-bold text-white tracking-wider">HORARIO / A</h4>
+                </div>
+                
+                <!-- 2. SESIÓN DE FOTOS -->
+                <div class="relative pl-6 sm:pl-8 flex flex-col justify-center min-h-[40px]">
+                    <span class="absolute -left-[9px] top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-gold shadow-md shadow-gold/50 border-2 border-darkBg"></span>
+                    <span class="absolute -left-28 sm:-left-44 top-1/2 -translate-y-1/2 font-cinzel text-gold font-bold text-xs sm:text-base text-right w-24 sm:w-40 pr-2 leading-tight">07:00 - 08:30 PM</span>
+                    <h4 class="font-cinzel text-base sm:text-lg font-bold text-white tracking-wider">H. FOTOS</h4>
+                </div>
+                
+                <!-- 3. CEREMONIA DE GALA -->
+                <div class="relative pl-6 sm:pl-8 flex flex-col justify-center min-h-[40px]">
+                    <span class="absolute -left-[9px] top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-gold shadow-md shadow-gold/50 border-2 border-darkBg"></span>
+                    <span class="absolute -left-28 sm:-left-44 top-1/2 -translate-y-1/2 font-cinzel text-gold font-bold text-xs sm:text-base text-right w-24 sm:w-40 pr-2">08:30 PM</span>
+                    <h4 class="font-cinzel text-base sm:text-lg font-bold text-white tracking-wider">CEREMONIA</h4>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="text-center text-gray-500 text-xs font-cinzel border-t border-gold/10 pt-8 max-w-4xl mx-auto px-4">
+            <p>PROMOCIÓN D'KHAOS 2026 • TODOS LOS DERECHOS RESERVADOS</p>
+            <p class="mt-2 text-gold/60">¡Te esperamos para compartir este momento tan especial!</p>
+        </footer>
+    </main>
+
+    <!-- SCRIPT PRINCIPAL LÓGICA & ANIMACIONES -->
+    <script>
+        // =========================================================
+        // 1. REGISTRO INMEDIATO Y DECLARACIÓN GLOBAL DE FUNCIONES
+        // =========================================================
+        window.playCinematicVideo = function() {
+            const introAction = document.getElementById('introAction');
+            const videoControls = document.getElementById('videoControls');
+            if (introAction) introAction.classList.add('hidden');
+            if (videoControls) videoControls.classList.remove('hidden');
+            
+            // Iniciar sintetizador de audio con reanudación explícita bajo clic
+            if (!audioCtx) {
+                initAmbientMusic();
+            } else if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            isAnimationRunning = true;
+            animProgress = 0;
+            if (typeof animFrameId !== 'undefined' && animFrameId) {
+                cancelAnimationFrame(animFrameId);
+            }
+            if (typeof renderIntroLoop === 'function') {
+                renderIntroLoop();
+            }
+        };
+
+        window.revealMainInvitation = function() {
+            isAnimationRunning = false;
+            if (typeof animFrameId !== 'undefined' && animFrameId) {
+                cancelAnimationFrame(animFrameId);
+            }
+
+            const videoScreen = document.getElementById('videoIntroScreen');
+            const mainScreen = document.getElementById('mainInvitation');
+
+            if (videoScreen) videoScreen.classList.add('opacity-0');
+            setTimeout(() => {
+                if (videoScreen) videoScreen.classList.add('hidden');
+                if (mainScreen) {
+                    mainScreen.classList.remove('pointer-events-none');
+                    mainScreen.classList.remove('opacity-0');
+                }
+
+                if (typeof confetti === 'function') {
+                    confetti({
+                        particleCount: 120,
+                        spread: 80,
+                        origin: { y: 0.6 },
+                        colors: ['#d4af37', '#ffffff', '#aa7c11', '#fef08a']
+                    });
+                }
+            }, 1000);
+        };
+
+        // =========================================================
+        // 2. INICIALIZACIÓN DE ÍCONOS & ESCUCHADORES DINÁMICOS
+        // =========================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) lucide.createIcons();
+
+            // Vincular escuchadores directos para prevenir fallos en entornos IFrame
+            const startBtn = document.getElementById('startExperienceBtn');
+            if (startBtn) {
+                startBtn.onclick = function(e) {
+                    e.preventDefault();
+                    window.playCinematicVideo();
+                };
+            }
+
+            const skipBtn = document.getElementById('skipBtn');
+            if (skipBtn) {
+                skipBtn.onclick = function(e) {
+                    e.preventDefault();
+                    window.revealMainInvitation();
+                };
+            }
+        });
+
+        // =========================================================
+        // 3. MOTOR DE ANIMACIÓN 2D ILUSTRADO (CASTILLO & PRINCESA)
+        // =========================================================
+        const animCanvas = document.getElementById('animationCanvas');
+        const animCtx = animCanvas.getContext('2d');
+        let animFrameId = null;
+        let animProgress = 0;
+        let isAnimationRunning = false;
+
+        function resizeAnimCanvas() {
+            if (!animCanvas) return;
+            animCanvas.width = window.innerWidth;
+            animCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeAnimCanvas);
+        resizeAnimCanvas();
+
+        // Generar estrellas fijas
+        const stars = Array.from({length: 90}, () => ({
+            x: Math.random(),
+            y: Math.random() * 0.7,
+            r: Math.random() * 1.8 + 0.5,
+            twinkleSpeed: Math.random() * 0.05 + 0.01
+        }));
+
+        function drawCastleAndPrincess(progress) {
+            if (!animCanvas || !animCtx) return;
+            const w = animCanvas.width;
+            const h = animCanvas.height;
+            animCtx.clearRect(0, 0, w, h);
+
+            // Cielo Nocturno Azul Real Imperial
+            const skyGrad = animCtx.createLinearGradient(0, 0, 0, h);
+            skyGrad.addColorStop(0, '#04020a');
+            skyGrad.addColorStop(0.4, '#0d0926');
+            skyGrad.addColorStop(0.8, '#1b103c');
+            skyGrad.addColorStop(1, '#080414');
+            animCtx.fillStyle = skyGrad;
+            animCtx.fillRect(0, 0, w, h);
+
+            // Estrellas Titilantes en el Cielo
+            stars.forEach((s, idx) => {
+                const alpha = Math.abs(Math.sin(Date.now() * 0.002 * s.twinkleSpeed + idx));
+                animCtx.fillStyle = `rgba(254, 240, 138, ${alpha})`;
+                animCtx.beginPath();
+                animCtx.arc(s.x * w, s.y * h, s.r, 0, Math.PI * 2);
+                animCtx.fill();
+            });
+
+            // Luna Llena Dorado Real con Halo Gigante
+            const moonX = w * 0.8;
+            const moonY = h * 0.22;
+            const moonR = Math.min(w, h) * 0.11;
+
+            const moonGlow = animCtx.createRadialGradient(moonX, moonY, moonR * 0.2, moonX, moonY, moonR * 3);
+            moonGlow.addColorStop(0, 'rgba(255, 235, 150, 0.6)');
+            moonGlow.addColorStop(0.3, 'rgba(212, 175, 55, 0.25)');
+            moonGlow.addColorStop(1, 'transparent');
+            animCtx.fillStyle = moonGlow;
+            animCtx.beginPath();
+            animCtx.arc(moonX, moonY, moonR * 3, 0, Math.PI * 2);
+            animCtx.fill();
+
+            // Cuerpo de la Luna
+            const moonGrad = animCtx.createLinearGradient(moonX - moonR, moonY - moonR, moonX + moonR, moonY + moonR);
+            moonGrad.addColorStop(0, '#ffffff');
+            moonGrad.addColorStop(0.7, '#fef08a');
+            moonGrad.addColorStop(1, '#d4af37');
+            animCtx.fillStyle = moonGrad;
+            animCtx.beginPath();
+            animCtx.arc(moonX, moonY, moonR, 0, Math.PI * 2);
+            animCtx.fill();
+
+            // Silueta Majestuosa del Castillo Real
+            const groundY = h * 0.85;
+            const cWidth = Math.min(w * 0.75, 600);
+            const cx = (w - cWidth) / 2;
+
+            animCtx.shadowBlur = 30;
+            animCtx.shadowColor = 'rgba(212, 175, 55, 0.4)';
+
+            animCtx.fillStyle = '#0a0518';
+
+            // Torreón Central Principal
+            const mainTowerW = cWidth * 0.26;
+            const mainTowerH = cWidth * 0.65;
+            const mainTowerX = cx + (cWidth - mainTowerW) / 2;
+            animCtx.fillRect(mainTowerX, groundY - mainTowerH, mainTowerW, mainTowerH);
+            
+            // Cúpula Torreón Central
+            animCtx.beginPath();
+            animCtx.moveTo(mainTowerX - 8, groundY - mainTowerH);
+            animCtx.lineTo(cx + cWidth / 2, groundY - mainTowerH - cWidth * 0.35);
+            animCtx.lineTo(mainTowerX + mainTowerW + 8, groundY - mainTowerH);
+            animCtx.fill();
+
+            // Torres Laterales
+            const sideW = cWidth * 0.18;
+            const sideH = cWidth * 0.45;
+            animCtx.fillRect(cx + cWidth * 0.15, groundY - sideH, sideW, sideH);
+            animCtx.beginPath();
+            animCtx.moveTo(cx + cWidth * 0.13, groundY - sideH);
+            animCtx.lineTo(cx + cWidth * 0.24, groundY - sideH - cWidth * 0.22);
+            animCtx.lineTo(cx + cWidth * 0.35, groundY - sideH);
+            animCtx.fill();
+
+            animCtx.fillRect(cx + cWidth * 0.67, groundY - sideH, sideW, sideH);
+            animCtx.beginPath();
+            animCtx.moveTo(cx + cWidth * 0.65, groundY - sideH);
+            animCtx.lineTo(cx + cWidth * 0.76, groundY - sideH - cWidth * 0.22);
+            animCtx.lineTo(cx + cWidth * 0.87, groundY - sideH);
+            animCtx.fill();
+
+            // Muralla Frontal
+            animCtx.fillRect(cx + cWidth * 0.1, groundY - cWidth * 0.25, cWidth * 0.8, cWidth * 0.25);
+            for(let i = 0; i < 9; i++) {
+                animCtx.fillRect(cx + cWidth * 0.12 + (i * cWidth * 0.08), groundY - cWidth * 0.29, cWidth * 0.04, cWidth * 0.04);
+            }
+
+            animCtx.shadowBlur = 0;
+
+            // Ventanas Encendidas
+            animCtx.fillStyle = '#fff099';
+            animCtx.shadowBlur = 15;
+            animCtx.shadowColor = '#d4af37';
+
+            const winX = cx + cWidth / 2 - 12;
+            const winY = groundY - mainTowerH + 40;
+            animCtx.beginPath();
+            animCtx.arc(winX + 12, winY + 12, 12, Math.PI, 0);
+            animCtx.rect(winX, winY + 12, 24, 30);
+            animCtx.fill();
+
+            animCtx.fillRect(cx + cWidth * 0.22, groundY - sideH + 30, 10, 20);
+            animCtx.fillRect(cx + cWidth * 0.74, groundY - sideH + 30, 10, 20);
+
+            animCtx.shadowBlur = 0;
+
+            // Niebla Mágica Flotante
+            const fogGrad = animCtx.createLinearGradient(0, groundY - 40, 0, h);
+            fogGrad.addColorStop(0, 'transparent');
+            fogGrad.addColorStop(0.5, 'rgba(212, 175, 55, 0.12)');
+            fogGrad.addColorStop(1, '#04020a');
+            animCtx.fillStyle = fogGrad;
+            animCtx.fillRect(0, groundY - 40, w, h - groundY + 40);
+
+            // Princesa de Gala
+            const princessX = cx + cWidth * 0.15 + (progress * cWidth * 0.55);
+            const princessY = groundY - 15;
+            const pScale = Math.min(w, h) * 0.002;
+
+            animCtx.fillStyle = 'rgba(0,0,0,0.5)';
+            animCtx.beginPath();
+            animCtx.ellipse(princessX, princessY, 30 * pScale, 8 * pScale, 0, 0, Math.PI * 2);
+            animCtx.fill();
+
+            // Capa Dorada
+            const capeGrad = animCtx.createLinearGradient(princessX - 25 * pScale, princessY - 100 * pScale, princessX, princessY);
+            capeGrad.addColorStop(0, '#d4af37');
+            capeGrad.addColorStop(1, '#7a5707');
+            animCtx.fillStyle = capeGrad;
+            animCtx.beginPath();
+            animCtx.moveTo(princessX - 5 * pScale, princessY - 95 * pScale);
+            animCtx.quadraticCurveTo(princessX - 45 * pScale - Math.sin(progress * 15) * 10, princessY - 40 * pScale, princessX - 35 * pScale, princessY);
+            animCtx.lineTo(princessX, princessY - 20 * pScale);
+            animCtx.closePath();
+            animCtx.fill();
+
+            // Vestido
+            const dressGrad = animCtx.createLinearGradient(princessX, princessY - 80 * pScale, princessX, princessY);
+            dressGrad.addColorStop(0, '#fff3a1');
+            dressGrad.addColorStop(0.5, '#d4af37');
+            dressGrad.addColorStop(1, '#aa7c11');
+            animCtx.fillStyle = dressGrad;
+            animCtx.beginPath();
+            animCtx.moveTo(princessX, princessY - 85 * pScale);
+            animCtx.quadraticCurveTo(princessX - 35 * pScale, princessY - 30 * pScale, princessX - 38 * pScale, princessY);
+            animCtx.lineTo(princessX + 38 * pScale, princessY);
+            animCtx.quadraticCurveTo(princessX + 35 * pScale, princessY - 30 * pScale, princessX, princessY - 85 * pScale);
+            animCtx.fill();
+
+            animCtx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+            animCtx.lineWidth = 1.5;
+            animCtx.beginPath();
+            animCtx.moveTo(princessX, princessY - 80 * pScale);
+            animCtx.lineTo(princessX - 12 * pScale, princessY);
+            animCtx.moveTo(princessX, princessY - 80 * pScale);
+            animCtx.lineTo(princessX + 12 * pScale, princessY);
+            animCtx.stroke();
+
+            // Torso, Cabeza & Tiara
+            animCtx.fillStyle = '#fce7f3';
+            animCtx.fillRect(princessX - 7 * pScale, princessY - 110 * pScale, 14 * pScale, 28 * pScale);
+
+            animCtx.fillStyle = '#3b1c08';
+            animCtx.beginPath();
+            animCtx.arc(princessX, princessY - 122 * pScale, 11 * pScale, 0, Math.PI * 2);
+            animCtx.fill();
+
+            animCtx.fillStyle = '#ffffff';
+            animCtx.shadowBlur = 10;
+            animCtx.shadowColor = '#ffffff';
+            animCtx.beginPath();
+            animCtx.moveTo(princessX - 8 * pScale, princessY - 130 * pScale);
+            animCtx.lineTo(princessX - 4 * pScale, princessY - 138 * pScale);
+            animCtx.lineTo(princessX, princessY - 131 * pScale);
+            animCtx.lineTo(princessX + 4 * pScale, princessY - 138 * pScale);
+            animCtx.lineTo(princessX + 8 * pScale, princessY - 130 * pScale);
+            animCtx.fill();
+            animCtx.shadowBlur = 0;
+
+            // Chispas Mágicas
+            for (let i = 0; i < 25; i++) {
+                const px = princessX + (Math.random() - 0.5) * 120 * pScale;
+                const py = princessY - Math.random() * 120 * pScale;
+                const pSize = Math.random() * 3 + 1;
+                animCtx.fillStyle = i % 2 === 0 ? '#ffffff' : '#fef08a';
+                animCtx.shadowBlur = 6;
+                animCtx.shadowColor = '#fef08a';
+                animCtx.beginPath();
+                animCtx.arc(px, py, pSize, 0, Math.PI * 2);
+                animCtx.fill();
+            }
+            animCtx.shadowBlur = 0;
+        }
+
+        function renderIntroLoop() {
+            if (!isAnimationRunning) return;
+            animProgress += 0.002;
+            drawCastleAndPrincess(animProgress);
+            if (animProgress >= 1) {
+                window.revealMainInvitation();
+            } else {
+                animFrameId = requestAnimationFrame(renderIntroLoop);
+            }
+        }
+
+        drawCastleAndPrincess(0);
+
+        // =========================================================
+        // 4. PARTÍCULAS DORADAS DE FONDO
+        // =========================================================
+        const canvas = document.getElementById('particlesCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            if (!canvas) return;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2.5 + 0.5;
+                this.speedY = Math.random() * -0.6 - 0.2;
+                this.speedX = (Math.random() - 0.5) * 0.4;
+                this.opacity = Math.random() * 0.7 + 0.3;
+                this.fade = Math.random() * 0.005 + 0.002;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.opacity -= this.fade;
+                if (this.opacity <= 0 || this.y < 0) {
+                    this.reset();
+                    this.y = canvas.height + 10;
+                }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(212, 175, 55, ${this.opacity})`;
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = '#d4af37';
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 60; i++) { particles.push(new Particle()); }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // =========================================================
+        // 5. SINTETIZADOR MÚSICA DE GALA (VALS DE PIANO)
+        // =========================================================
+        let audioCtx = null;
+        let isPlayingAudio = false;
+        let musicalInterval = null;
+
+        function initAmbientMusic() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+            }
+
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            if (musicalInterval) return;
+
+            try {
+                const waltzChords = [
+                    { bass: 146.83, melody: [293.66, 369.99, 440.00, 587.33] },
+                    { bass: 185.00, melody: [369.99, 440.00, 554.37, 739.99] },
+                    { bass: 196.00, melody: [392.00, 493.88, 587.33, 783.99] },
+                    { bass: 220.00, melody: [440.00, 554.37, 659.25, 880.00] }
+                ];
+
+                let step = 0;
+
+                function playWaltzBeat() {
+                    if (!audioCtx || audioCtx.state !== 'running') return;
+                    
+                    const chordIndex = Math.floor(step / 3) % waltzChords.length;
+                    const chord = waltzChords[chordIndex];
+                    const beatInMeasure = step % 3;
+
+                    const now = audioCtx.currentTime;
+
+                    if (beatInMeasure === 0) {
+                        const bassOsc = audioCtx.createOscillator();
+                        const bassGain = audioCtx.createGain();
+                        
+                        bassOsc.type = 'triangle';
+                        bassOsc.frequency.setValueAtTime(chord.bass, now);
+                        
+                        bassGain.gain.setValueAtTime(0.001, now);
+                        bassGain.gain.exponentialRampToValueAtTime(0.12, now + 0.05);
+                        bassGain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+
+                        bassOsc.connect(bassGain);
+                        bassGain.connect(audioCtx.destination);
+                        bassOsc.start(now);
+                        bassOsc.stop(now + 0.95);
+                    } else {
+                        chord.melody.forEach((freq, idx) => {
+                            const osc = audioCtx.createOscillator();
+                            const gain = audioCtx.createGain();
+                            
+                            osc.type = 'sine';
+                            osc.frequency.setValueAtTime(freq, now);
+
+                            gain.gain.setValueAtTime(0.001, now);
+                            gain.gain.exponentialRampToValueAtTime(0.035 / (idx + 1), now + 0.03);
+                            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
+
+                            osc.connect(gain);
+                            gain.connect(audioCtx.destination);
+                            osc.start(now);
+                            osc.stop(now + 0.65);
+                        });
+                    }
+
+                    step++;
+                }
+
+                musicalInterval = setInterval(playWaltzBeat, 460);
+                isPlayingAudio = true;
+                updateAudioIcon();
+            } catch (e) {
+                console.log("Audio desactivado por el usuario o navegador:", e);
+            }
+        }
+
+        window.toggleAudio = function() {
+            if (!audioCtx) { initAmbientMusic(); return; }
+            if (audioCtx.state === 'suspended') { audioCtx.resume(); isPlayingAudio = true; }
+            else if (audioCtx.state === 'running') { audioCtx.suspend(); isPlayingAudio = false; }
+            updateAudioIcon();
+        };
+
+        function updateAudioIcon() {
+            const icon = document.getElementById('audioIcon');
+            if (icon) {
+                icon.setAttribute('data-lucide', isPlayingAudio ? 'volume-2' : 'volume-x');
+                if (window.lucide) lucide.createIcons();
+            }
+        }
+
+        // Pausar audio si el usuario cambia de pestaña
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden && audioCtx && audioCtx.state === 'running') {
+                audioCtx.suspend();
+                isPlayingAudio = false;
+                updateAudioIcon();
+            }
+        });
+
+        window.addEventListener('pagehide', function() {
+            if (audioCtx) {
+                audioCtx.suspend();
+                isPlayingAudio = false;
+            }
+        });
+
+        // =========================================================
+        // 6. FUNCIONES DE CALENDARIO
+        // =========================================================
+        window.addToCalendar = function() {
+            const title = encodeURIComponent("Gala de Graduación Promoción D'KHAOS - Colegio Honores de Izaguirre");
+            const details = encodeURIComponent("Graduación de Secundaria de la Promoción D'KHAOS.");
+            const location = encodeURIComponent("Orquidia Dorada, Av. Chillón Trapiche 051, Comas 15316");
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=20261121T183000Z/20261122T020000Z&details=${details}&location=${location}`;
+            window.open(url, '_blank');
+        };
+
+        window.onload = function() {
+            setTimeout(() => {
+                const logo = document.getElementById('introLogo');
+                if (logo) logo.classList.remove('opacity-0', 'translate-y-6');
+            }, 300);
+        };
+
+        // Cuenta regresiva (Sábado, 21 de Noviembre de 2026 6:30 PM)
+        const eventDate = new Date("November 21, 2026 18:30:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const diff = eventDate - now;
+
+            const daysEl = document.getElementById("cd-days");
+            const hoursEl = document.getElementById("cd-hours");
+            const minEl = document.getElementById("cd-minutes");
+            const secEl = document.getElementById("cd-seconds");
+
+            if (!daysEl || !hoursEl || !minEl || !secEl) return;
+
+            if (diff <= 0) {
+                daysEl.innerText = "00";
+                hoursEl.innerText = "00";
+                minEl.innerText = "00";
+                secEl.innerText = "00";
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            daysEl.innerText = days.toString().padStart(2, '0');
+            hoursEl.innerText = hours.toString().padStart(2, '0');
+            minEl.innerText = minutes.toString().padStart(2, '0');
+            secEl.innerText = seconds.toString().padStart(2, '0');
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>
